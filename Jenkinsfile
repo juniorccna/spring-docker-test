@@ -1,11 +1,10 @@
 pipeline {
    agent any
    
-   stage('checkout project') {
-        checkout scm
-   }
-   
    stages {
+      stage('checkout project') {
+        checkout scm
+      }
       stage('Build') {
          steps {
             sh 'chmod -R 770 ./'
