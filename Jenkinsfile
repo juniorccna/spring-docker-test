@@ -1,15 +1,14 @@
 pipeline {
-   agent any
-   
-   stages {
-      stage('checkout project') {
-        checkout scm
-      }
-      stage('Build') {
-         steps {
-            sh 'chmod -R 770 ./'
-            sh "./mvnw -Dmaven.test.skip=true clean package"
-         }
-      }
-   }
+    agent any
+    tools {
+        maven 'Maven 3.6.2'
+		jdk 'jdk8'
+    }
+    stages {
+        stage ('Build') {
+            steps {
+                sh 'mvn clean package -DskipTest' 
+            }
+        }
+    }
 }
