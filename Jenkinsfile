@@ -60,8 +60,19 @@ pipeline {
     }
     
     post {
+	failure {
+          slackSend channel: '#bbpm',
+                    color: 'danger',
+                    message: "${currentBuild.currentResult}: ${delivery.kubernetes.configuration.appName} #${env.VERSION}: ${env.BUILD_URL}"
+        }
+	success {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true                     
+        }
         always {
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+	    emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+		
             junit 'target/surefire-reports/*.xml'
         }
     }
