@@ -39,6 +39,24 @@ pipeline {
 	    }
 	}
 	    
+	stage('Deploy QA') {
+            steps {
+                sh 'echo "Enviando para ambiente de QA"'
+            }
+        }
+	    
+	stage('Deploy approval') {
+            steps {
+                input('Do you want to proceed?')
+            }
+        }
+	    
+	stage('Deploy PROD') {
+            steps {
+                sh 'echo "Enviando para ambiente de PROD"'
+            }
+        }
+	    
     }
     
     post {
